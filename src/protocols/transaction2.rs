@@ -24,18 +24,18 @@ pub enum State {
     Done,
 }
 
-pub struct TxSubmissionProtocol {
+pub struct TxSubmission2Protocol {
     pub(crate) state: State,
     pub(crate) result: Option<Result<String, String>>,
 }
 
-impl Default for TxSubmissionProtocol {
+impl Default for TxSubmission2Protocol {
     fn default() -> Self {
-        TxSubmissionProtocol { state: State::Idle, result: None }
+        TxSubmission2Protocol { state: State::Idle, result: None }
     }
 }
 
-impl TxSubmissionProtocol {
+impl TxSubmission2Protocol {
     fn msg_reply_tx_ids(&self) -> Vec<u8> {
         // We need to do manual cbor encoding to do the empty indefinite array for txs.
         // We always just tell the server we have no transactions to send it.
@@ -48,7 +48,7 @@ impl TxSubmissionProtocol {
     }
 }
 
-impl Protocol for TxSubmissionProtocol {
+impl Protocol for TxSubmission2Protocol {
     fn protocol_id(&self) -> u16 {
         return 0x0004u16;
     }
@@ -79,17 +79,17 @@ impl Protocol for TxSubmissionProtocol {
     fn send_data(&mut self) -> Option<Vec<u8>> {
         return match self.state {
             State::Idle => {
-                debug!("TxSubmissionProtocol::State::Idle");
+                debug!("TxSubmission2Protocol::State::Idle");
                 None
             }
             State::TxIdsBlocking => {
-                debug!("TxSubmissionProtocol::State::TxIdsBlocking");
+                debug!("TxSubmission2Protocol::State::TxIdsBlocking");
                 // Server will wait on us forever. Just move to Done state.
                 self.state = State::Done;
                 None
             }
             State::TxIdsNonBlocking => {
-                debug!("TxSubmissionProtocol::State::TxIdsNonBlocking");
+                debug!("TxSubmission2Protocol::State::TxIdsNonBlocking");
                 // Tell the server that we have no transactions to send them
                 let payload = self.msg_reply_tx_ids();
                 self.state = State::Idle;
@@ -97,7 +97,7 @@ impl Protocol for TxSubmissionProtocol {
             }
             //State::Txs => { None }
             State::Done => {
-                warn!("TxSubmissionProtocol::State::Done");
+                warn!("TxSubmission2Protocol::State::Done");
                 self.result = Option::Some(Ok(String::from("Done")));
                 None
             }
@@ -118,7 +118,7 @@ impl Protocol for TxSubmissionProtocol {
                             //tsMsgDone       = [4]
                             //msgReplyKTnxBye = [5]
                             0 => {
-                                debug!("TxSubmissionProtocol received MsgRequestTxIds");
+                                debug!("TxSubmission2Protocol received MsgRequestTxIds");
                                 let is_blocking = cbor_array[1] == Value::Bool(true);
                                 self.state = if is_blocking {
                                     State::TxIdsBlocking
