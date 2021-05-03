@@ -18,9 +18,10 @@ use crate::{Agency, Protocol};
 #[derive(Debug)]
 pub enum State {
     Idle,
+    Hello,
     TxIdsBlocking,
     TxIdsNonBlocking,
-    //Txs,
+    Txs,
     Done,
 }
 
