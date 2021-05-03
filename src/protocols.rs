@@ -12,6 +12,7 @@ SPDX-License-Identifier: GPL-3.0-only OR LGPL-3.0-only
 /* node-to-node protocols */
 pub mod handshake;
 pub mod transaction;
+pub mod transaction2;
 pub mod chainsync;
 
 /* example-only protocols */
