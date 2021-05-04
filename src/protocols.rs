@@ -14,6 +14,7 @@ pub mod handshake;
 pub mod transaction;
 pub mod transaction2;
 pub mod chainsync;
+pub mod blockfetch;
 
 /* example-only protocols */
 pub mod pingpong;

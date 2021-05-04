@@ -17,8 +17,8 @@ use crate::{Agency, Protocol};
 
 #[derive(Debug)]
 pub enum State {
-    Idle,
     Hello,
+    Idle,
     TxIdsBlocking,
     TxIdsNonBlocking,
     Txs,
@@ -32,7 +32,7 @@ pub struct TxSubmission2Protocol {
 
 impl Default for TxSubmission2Protocol {
     fn default() -> Self {
-        TxSubmission2Protocol { state: State::Idle, result: None }
+        TxSubmission2Protocol { state: State::Hello, result: None }
     }
 }
 
@@ -102,6 +102,7 @@ impl Protocol for TxSubmission2Protocol {
                 self.result = Option::Some(Ok(String::from("Done")));
                 None
             }
+            State::Hello => { None }
         };
     }
 
@@ -118,6 +119,7 @@ impl Protocol for TxSubmission2Protocol {
                             //msgReplyTxs     = [3, tsIdList ]
                             //tsMsgDone       = [4]
                             //msgReplyKTnxBye = [5]
+                            //msgHello        = [6]
                             0 => {
                                 debug!("TxSubmission2Protocol received MsgRequestTxIds");
                                 let is_blocking = cbor_array[1] == Value::Bool(true);
@@ -126,6 +128,10 @@ impl Protocol for TxSubmission2Protocol {
                                 } else {
                                     State::TxIdsNonBlocking
                                 }
+                            }
+                            6 ==> {
+                                debug!("TxSubmission2Protocol received MsgHello");
+                                self.state = State::Idle
                             }
                             _ => {
                                 error!("unexpected message_id: {}", message_id);
