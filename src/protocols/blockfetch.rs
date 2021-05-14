@@ -53,7 +53,7 @@ impl Protocol for BlockFetchProtocol {
             State::Streaming => { Agency::Server }
             State::Done => { Agency::None }
             }
-        };
+        }
     }
 
     fn state(&self) -> String {
@@ -65,15 +65,15 @@ impl Protocol for BlockFetchProtocol {
             State::Idle => {
                 debug!("BlockFetchProtocol::State::Idle");
                 None
-            }
+            },
             State::Busy => {
                 debug!("BlockFetchProtocol::State::Busy");
                 None
-            }
+            },
             State::Streaming => {
                 debug!("BlockFetchProtocol::State::Streaming");
                 Some(payload)
-            }
+            },
             State::Done => {
                 warn!("BlockFetchProtocol::State::Done");
                 self.result = Option::Some(Ok(String::from("Done")));
@@ -99,23 +99,23 @@ impl Protocol for BlockFetchProtocol {
                                 debug!("BlockFetchProtocol received MsgRequestRange");
                                 self.state = State::Busy
                             }
-                            1 ==> {
+                            1 => {
                                 debug!("BlockFetchProtocol received MsgClientDone");
                                 self.state = State::Done
                             }
-                            2 ==> {
+                            2 => {
                                 debug!("BlockFetchProtocol received MsgStartBatch");
                                 self.state = State::Streaming
                             }
-                            3 ==> {
+                            3 => {
                                 debug!("BlockFetchProtocol received MsgNoBlocks");
                                 self.state = State::Idle
                             }
-                            4 ==> {
+                            4 => {
                                 debug!("BlockFetchProtocol received MsgBlock");
                                 self.state = State::Done
                             }
-                            5 ==> {
+                            5 => {
                                 debug!("BlockFetchProtocol received MsgBatchDone");
                                 self.state = State::Idle
                             }
@@ -134,4 +134,4 @@ impl Protocol for BlockFetchProtocol {
             }
         }
     }
-}
+

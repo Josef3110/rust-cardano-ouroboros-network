@@ -128,8 +128,8 @@ impl Protocol for TxSubmission2Protocol {
                                 } else {
                                     State::TxIdsNonBlocking
                                 }
-                            }
-                            6 ==> {
+                            },
+                            6 => {
                                 debug!("TxSubmission2Protocol received MsgHello");
                                 self.state = State::Idle
                             }
