@@ -21,11 +21,17 @@ pub enum State {
 pub struct BlockFetchProtocol {
     pub(crate) state: State,
     pub(crate) result: Option<Result<String, String>>,
+	receivedRequest: bool,
+	sentRequest: bool,
 }
 
 impl Default for BlockFetchProtocol {
     fn default() -> Self {
-        BlockFetchProtocol { state: State::Idle, result: None }
+        BlockFetchProtocol { 
+			state: State::Idle, 
+			result: None, 
+			receivedRequest: false, 
+			sentRequest: false }
     }
 }
 
@@ -68,7 +74,10 @@ impl Protocol for BlockFetchProtocol {
             },
             State::Busy => {
                 debug!("BlockFetchProtocol::State::Busy");
-                None
+				if self.receivedRequest { // send MsgNoBlocks message to indicate that we have nothing to share 
+				}
+				else if self.sentRequest { // send MsgStartBatch to start getting blocks
+				}
             },
             State::Streaming => {
                 debug!("BlockFetchProtocol::State::Streaming");
@@ -97,7 +106,8 @@ impl Protocol for BlockFetchProtocol {
                             //msgBatchDone    = [5]
                             0 => {
                                 debug!("BlockFetchProtocol received MsgRequestRange");
-                                self.state = State::Busy
+                                self.state = State::Busy;
+								self.receivedRequest = true
                             }
                             1 => {
                                 debug!("BlockFetchProtocol received MsgClientDone");
