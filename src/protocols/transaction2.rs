@@ -70,6 +70,8 @@ impl Protocol for TxSubmission2Protocol {
             State::Done => {
                 if self.result.is_none() { Agency::Client } else { Agency::None }
             }
+            State::Hello => { Agency::None }
+            State::Txs => { Agency::None }			// TODO: change to the correct Agency
         };
     }
 
@@ -96,13 +98,19 @@ impl Protocol for TxSubmission2Protocol {
                 self.state = State::Idle;
                 Some(payload)
             }
-            //State::Txs => { None }
+            State::Txs => { 
+				debug!("TxSubmission2Protocol::State::Txs");
+				None 
+			}
             State::Done => {
                 warn!("TxSubmission2Protocol::State::Done");
                 self.result = Option::Some(Ok(String::from("Done")));
                 None
             }
-            State::Hello => { None }
+            State::Hello => { 
+				debug!("TxSubmission2Protocol::State::Hello");
+				None 
+			}
         };
     }
 
