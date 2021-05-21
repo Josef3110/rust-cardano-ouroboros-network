@@ -5,14 +5,14 @@ SPDX-License-Identifier: GPL-3.0-only OR LGPL-3.0-only
 */
 
 
-use std::{
+/*use std::{
     time::{Duration, Instant},
     io,
     ops::Sub,
-};
+};*/
 
-use log::{debug, error, info, trace, warn};
-use serde_cbor::{de, Deserializer, ser, Value};
+use log::{debug, error, warn};
+use serde_cbor::{de, Deserializer, Value};
 
 use crate::{
     Agency,
@@ -54,7 +54,7 @@ impl Default for BlockFetchProtocol {
 }
 
 impl BlockFetchProtocol {
-    fn save_block(&mut self, parse_msg_block: &BlockHeader) -> io::Result<()> {		// TODO: this is just a copy from chainsync!
+/*    fn save_block(&mut self, parse_msg_block: &BlockHeader) -> io::Result<()> {		// TODO: this is just a copy from chainsync!
         match self.store.as_mut() {
             Some(store) => {
                 self.pending_blocks.push((*parse_msg_block).clone());
@@ -62,7 +62,7 @@ impl BlockFetchProtocol {
             None => {}
         }
         Ok(())
-    }
+    }*/
 
 }
 
@@ -205,7 +205,7 @@ impl UnwrapValue for Value {
 }
 
     
-	pub fn parse_msg_block(cbor_array: Vec<Value>) -> Option<(BlockHeader)> {
+	pub fn parse_msg_block(cbor_array: Vec<Value>) -> Option<BlockHeader> {
     	let mut msg_block = BlockHeader {
         	block_number: 0,
 	        slot_number: 0,
