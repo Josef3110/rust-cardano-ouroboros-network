@@ -46,6 +46,3 @@ crate-type = ["staticlib"]
 name = "pooltool"
 crate-type = ["staticlib"]
 
-[[example]]
-name = "ping"
-crate-type = ["main"]

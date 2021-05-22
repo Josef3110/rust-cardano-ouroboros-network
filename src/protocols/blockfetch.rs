@@ -14,14 +14,15 @@ SPDX-License-Identifier: GPL-3.0-only OR LGPL-3.0-only
 use log::{debug, error, warn};
 use serde_cbor::{de, Deserializer, Value};
 
+//use blake2b_simd::Params;
+
 use crate::{
     Agency,
     Protocol,
     BlockStore,
-    BlockHeader,
+	BlockHeader,
 };
 
-use blake2b_simd::Params;
 
 
 #[derive(Debug)]
@@ -32,7 +33,15 @@ pub enum State {
     Done,
 }
 
+
+#[derive(PartialEq)]
+pub enum Mode {
+    Receive,
+    Send,
+}
+
 pub struct BlockFetchProtocol {
+	pub mode: Mode,
     pub(crate) state: State,
     pub(crate) result: Option<Result<String, String>>,
     pub store: Option<Box<dyn BlockStore>>,
@@ -44,6 +53,7 @@ pub struct BlockFetchProtocol {
 impl Default for BlockFetchProtocol {
     fn default() -> Self {
         BlockFetchProtocol { 
+			mode: Mode::Receive,
 			state: State::Idle, 
 			result: None, 
 			store: None,
@@ -232,7 +242,7 @@ impl UnwrapValue for Value {
             match &header_array[1] {
                 Value::Bytes(wrapped_block_header_bytes) => {
                     // calculate the block hash
-                    let hash = Params::new().hash_length(32).to_state().update(&*wrapped_block_header_bytes).finalize();
+//                    let hash = Params::new().hash_length(32).to_state().update(&*wrapped_block_header_bytes).finalize();
 //                    parse_msg_block.hash = hash.as_bytes().to_owned();
 
                     let block_header: Value = de::from_slice(&wrapped_block_header_bytes[..]).unwrap();
