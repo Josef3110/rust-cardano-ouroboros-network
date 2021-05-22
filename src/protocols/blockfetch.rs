@@ -42,9 +42,10 @@ pub enum Mode {
 
 pub struct BlockFetchProtocol {
 	pub mode: Mode,
-    pub(crate) state: State,
-    pub(crate) result: Option<Result<String, String>>,
+    pub state: State,
+    pub result: Option<Result<String, String>>,
     pub store: Option<Box<dyn BlockStore>>,
+    pub network_magic: u32,
     pub pending_blocks: Vec<BlockHeader>,
 	pub received_request: bool,
 	pub sent_request: bool,
@@ -57,6 +58,7 @@ impl Default for BlockFetchProtocol {
 			state: State::Idle, 
 			result: None, 
 			store: None,
+			network_magic: 764824073,
 			pending_blocks: Vec::new(),
 			received_request: false, 
 			sent_request: false }
